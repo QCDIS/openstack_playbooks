@@ -1,0 +1,11 @@
+- os_keypair:
+    state: "{{ state }}"
+    name: "{{ name }}"
+  environment:
+    OS_AUTH_URL: "{{ auth_url }}"
+    OS_ACCESS_TOKEN: "{{ access_token }}"
+    OS_PROJECT_ID: "{{ project_id }}"
+    OS_AUTH_TYPE: v3oidcaccesstoken
+    OS_IDENTITY_PROVIDER: "{{ identity_provider }}"
+    OS_PROTOCOL: openid
+  register: key_output

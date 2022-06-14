@@ -1,0 +1,61 @@
+- hosts: localhost
+  vars:
+    - auth_data: {
+       'auth_url': "{{ ansible_env.OS_AUTH_URL }}",
+       'os_access_token': "{{ ansible_env.OS_ACCESS_TOKEN }}",
+       'os_project_id': "{{ ansible_env.OS_PROJECT_ID }}",
+       'os_auth_type': "{{ ansible_env.OS_AUTH_TYPE }}",
+       'os_identity_provider': "{{ ansible_env.OS_IDENTITY_PROVIDER}}",
+       'os_protocol': "{{ ansible_env.OS_PROTOCOL}}"
+      }
+      ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+
+    - find:
+        paths: /tmp/
+        patterns: "refresh_token_responce_{{hostvars['localhost']['credentials'][0]['user']}}.json"
+        age: 1h
+      register: older_files
+
+    - file:
+        path: "{{ item.path }}"
+        state: absent
+      with_items: "{{ older_files.files }}"
+
+    - stat:
+        path: /tmp/refresh_token_responce_{{hostvars['localhost']['credentials'][0]['user']}}.json
+      register: stat_result
+
+    - include_vars:
+        file: /tmp/refresh_token_responce_{{hostvars['localhost']['credentials'][0]['user']}}.json
+        name: refresh_token_cache
+      when: stat_result.stat.exists
+
+
+    - uri:
+        url: "{{hostvars['localhost']['credentials'][0]['auth_url']}}"
+        user: "{{hostvars['localhost']['credentials'][0]['user']}}"
+        password: "{{hostvars['localhost']['credentials'][0]['token']}}"
+        method: POST
+        body: "client_id={{hostvars['localhost']['credentials'][0]['user']}}&client_secret={{hostvars['localhost']['credentials'][0]['token']}}&grant_type={{hostvars['localhost']['credentials'][0]['token_type']}}&refresh_token={{hostvars['localhost']['credentials'][0]['keys']['refresh_token']}}&scope=openid%20email%20profile"
+        force_basic_auth: yes
+        status_code: 200
+        body_format: raw
+      register: refresh_token_responce
+      when: not stat_result.stat.exists
+
+
+    - local_action: copy content={{ refresh_token_responce }} dest=/tmp/refresh_token_responce_{{hostvars['localhost']['credentials'][0]['user']}}.json
+      when: not stat_result.stat.exists
+
+    - shell: jq -r '.json.access_token' /tmp/refresh_token_responce_{{hostvars['localhost']['credentials'][0]['user']}}.json
+      register: access_token
+
+    - set_stats:
+        data:
+          access_token: "{{ access_token.stdout }}"
+      register: refresh_token_stats
+
+#    - debug:
+#        var: refresh_token_stats

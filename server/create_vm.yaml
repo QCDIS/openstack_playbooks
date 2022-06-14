@@ -1,0 +1,45 @@
+- hosts: localhost
+  vars:
+    - auth_data: {
+       'auth_url': "{{ ansible_env.OS_AUTH_URL }}",
+       'os_access_token': "{{ ansible_env.OS_ACCESS_TOKEN }}",
+       'os_project_id': "{{ ansible_env.OS_PROJECT_ID }}",
+       'os_auth_type': "{{ ansible_env.OS_AUTH_TYPE }}",
+       'os_identity_provider': "{{ ansible_env.OS_IDENTITY_PROVIDER}}",
+       'os_protocol': "{{ ansible_env.OS_PROTOCOL}}"
+      }
+      ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+
+    - local_action: copy content={{ item.value }} dest=/tmp/{{ item.name }}.json
+      with_items:
+        - { name: images, value: "{{ images }}" }
+        - { name: selected_flavors, value: "{{ selected_flavors }}" }
+        - { name: networks, value: "{{ networks }}" }
+        - { name: ssh_keys, value: "{{ ssh_keys }}" }
+
+    - shell: jq -s '.[0] * .[1]' /tmp/images.json /tmp/networks.json > /tmp/images_networks.json
+
+    - shell: jq -s '.[0] * .[1]' /tmp/images_networks.json /tmp/ssh_keys.json > /tmp/images_networks_ssh_keys.json
+
+    - shell: jq -s '.[0] * .[1]' /tmp/images_networks_ssh_keys.json  /tmp/selected_flavors.json > /tmp/vms.json
+
+
+    - include_vars:
+        file: /tmp/vms.json
+        name: vms
+
+    - include_tasks: 2.9/vm.yaml
+      vars:
+        state: present
+        name: "{{ item.key }}"
+        image: "{{ item.value['image_id'] }}"
+        key_name: "{{ item.value['attributes']['user_key_pair']['keys']['name'] }}"
+        flavor: "{{ item.value['flavor_id'] }}"
+        network: "{{ item.value['network_id'] }}"
+        access_token: "{{ access_token }}"
+        protocol: openid
+        instance_name: "{{ item.key }}"
+        username: vm_user
+      loop: "{{ vms | dict2items }}"

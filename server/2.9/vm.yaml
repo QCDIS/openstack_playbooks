@@ -1,0 +1,46 @@
+- stat:
+    path: /tmp/os_server_output{{ project_id }}.json
+  register: stat_result
+
+- file:
+    path: /tmp/os_server_output{{ project_id }}.json
+    state: absent
+  when: stat_result.stat.exists
+
+- os_server:
+    state: "{{ state }}"
+    name: "{{ name }}"
+    image: "{{ image }}"
+    key_name: "{{ key_name }}"
+    flavor: "{{ flavor }}"
+    network: "{{ network }}"
+    timeout: 300
+    userdata: |
+      {%- raw -%}
+      #!/bin/bash
+      default_user=`ls /home`
+      sudo useradd -m vm_user -s /bin/bash &> out.log
+      sudo mkdir /home/vm_user/.ssh/ &>> out.log
+      sudo cp -r /home/$default_user/.ssh/ /home/vm_user/&>> out.log
+      sudo chown -R vm_user /home/vm_user/.ssh/ &>> out.log
+      sudo usermod -a -G sudo vm_user &>> out.log
+      echo "vm_user  ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/vm_user &>> out.log
+      {% endraw %}
+  environment:
+    OS_AUTH_URL: "{{ auth_url }}"
+    OS_ACCESS_TOKEN: "{{ access_token }}"
+    OS_PROJECT_ID: "{{ project_id }}"
+    OS_AUTH_TYPE: v3oidcaccesstoken
+    OS_IDENTITY_PROVIDER: "{{ identity_provider }}"
+    OS_PROTOCOL: "{{ protocol }}"
+  register: os_server_output
+
+- local_action: copy content={{ os_server_output }} dest=/tmp/os_server_output{{ project_id }}.json
+
+- shell: jq '.openstack | {"{{ name }}":{attributes:{public_ip:.accessIPv4 }}}' /tmp/os_server_output{{ project_id }}.json
+  register: vm_ip
+
+- set_stats:
+    data:
+      vm: "{{ vm_ip.stdout }}"
+  register: os_server_output

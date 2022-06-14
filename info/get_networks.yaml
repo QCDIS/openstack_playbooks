@@ -1,0 +1,28 @@
+- hosts: localhost
+  vars:
+    - auth_data: {
+       'auth_url': "{{ ansible_env.OS_AUTH_URL }}",
+       'os_access_token': "{{ ansible_env.OS_ACCESS_TOKEN }}",
+       'os_project_id': "{{ ansible_env.OS_PROJECT_ID }}",
+       'os_auth_type': "{{ ansible_env.OS_AUTH_TYPE }}",
+       'os_identity_provider': "{{ ansible_env.OS_IDENTITY_PROVIDER}}",
+       'os_protocol': "{{ ansible_env.OS_PROTOCOL}}"
+      }
+      ansible_python_interpreter: /usr/bin/python3
+
+  tasks:
+
+    - debug:
+        var: item.key
+      loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
+
+    - include_tasks: get_network.yaml
+      vars:
+        project_id: "{{ hostvars['localhost']['project_id'] }}"
+        auth_url: "{{ hostvars['localhost']['auth_url'] }}"
+        access_token: "{{ access_token }}"
+        token_type: v3oidcaccesstoken
+        identity_provider: "{{ hostvars['localhost']['identity_provider'] }}"
+        protocol: openid
+        instance_name: "{{ item.key }}"
+      loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
