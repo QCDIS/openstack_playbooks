@@ -16,6 +16,10 @@
         var: item.key
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
 
+
+    - debug:
+        var: access_token
+
     - include_tasks: get_network.yaml
       vars:
         project_id: "{{ hostvars['localhost']['project_id'] }}"
@@ -26,7 +30,7 @@
         protocol: openid
         instance_name: "{{ item.key }}"
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
-      when: access_token is defined
+      when: "access_token is defined"
 
     - include_tasks: get_network.yaml
       vars:
