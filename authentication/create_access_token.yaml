@@ -42,11 +42,10 @@
         status_code: 200
         body_format: raw
       register: refresh_token_response
-#      when: "not {{stat_result.stat.exists}} and 'keys' in {{hostvars['localhost']['credentials'][0]['keys']}} and 'refresh_token' in {{hostvars['localhost']['credentials'][0]['keys']}}"
-      when: "'stat' not in  {{stat_result}}"
+      when: "'stat' not in  {{stat_result}} and 'keys' in {{hostvars['localhost']['credentials'][0]['keys']}} and 'refresh_token' in {{hostvars['localhost']['credentials'][0]['keys']}}"
 
     - local_action: copy content={{ refresh_token_response }} dest=/tmp/refresh_token_response_{{hostvars['localhost']['credentials'][0]['user']}}.json
-      when: "not stat_result.stat.exists and 'keys' in {{hostvars['localhost']['credentials'][0]['keys']}} and 'refresh_token' in {{hostvars['localhost']['credentials'][0]['keys']}}"
+      when: "'stat' not in  {{stat_result}} and 'keys' in {{hostvars['localhost']['credentials'][0]['keys']}} and 'refresh_token' in {{hostvars['localhost']['credentials'][0]['keys']}}"
 
     - shell: jq -r '.json.access_token' /tmp/refresh_token_response_{{hostvars['localhost']['credentials'][0]['user']}}.json
       register: access_token
