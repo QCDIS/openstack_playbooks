@@ -40,13 +40,13 @@
   when: not stat_result.stat.exists and access_token_exists
 
 - os_networks_info:
+    auth:
+      auth_url: "{{ auth_url }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      project_name: "Lab"
+      project_id: "{{ project_id }}"
   register: networks_info_output
-  auth:
-    auth_url: "{{ auth_url }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    project_name: "Lab"
-    project_id: "{{ project_id }}"
   when: not stat_result.stat.exists and not access_token_exists
 
 - debug:
