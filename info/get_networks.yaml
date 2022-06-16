@@ -26,7 +26,7 @@
         protocol: openid
         instance_name: "{{ item.key }}"
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
-      when: access_token
+      when: access_token is defined
 
     - include_tasks: get_network.yaml
       vars:
@@ -35,4 +35,4 @@
         password: "{{hostvars['localhost']['credentials'][0]['token']}}"
         instance_name: "{{ item.key }}"
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
-      when: not access_token
+      when: access_token not is defined

@@ -15,9 +15,6 @@
         refresh_token_exists: true
       when: "'auth_keys' in hostvars.localhost.credentials[0] and 'refresh_token' in hostvars.localhost.credentials[0]['auth_keys']"
 
-    - debug:
-        var: refresh_token
-
     - find:
         paths: /tmp/
         patterns: "refresh_token_response_{{hostvars['localhost']['credentials'][0]['user']}}.json"
