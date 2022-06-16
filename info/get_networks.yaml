@@ -18,7 +18,7 @@
 
     - name: Run the command if "access_token" is defined
       ansible.builtin.shell: echo "I've got '{{ access_token }}' and am not afraid to use it!"
-      when: foo is access_token
+      when: access_token is defined
 
     - include_tasks: get_network.yaml
       vars:
