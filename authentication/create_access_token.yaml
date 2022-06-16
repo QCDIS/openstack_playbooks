@@ -56,7 +56,13 @@
 
 
     - openstack.cloud.auth:
-        interface: "public"
+        auth:
+          username: "{{ hostvars['localhost']['credentials'][0]['user'] }}"
+          project_id: "{{ hostvars['localhost']['credentials'][0]['extra_properties']['project_id'] }}"
+          auth_url: "{{ hostvars['localhost']['credentials'][0]['auth_url'] }}"
+          password: "{{hostvars['localhost']['credentials'][0]['token']}}"
+          domain: "{{ hostvars['localhost']['credentials'][0]['extra_properties']['domain'] }}"
+          project_name: "Lab"
 
     - set_stats:
         data:
