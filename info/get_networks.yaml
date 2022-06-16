@@ -38,8 +38,9 @@
 
     - include_tasks: get_network.yaml
       vars:
-        project_id: "{{ hostvars['localhost']['project_id'] }}"
-        auth_url: "{{ hostvars['localhost']['auth_url'] }}"
+        username:  "{{ hostvars['localhost']['credentials'][0]['user'] }}"
+        project_id: "{{ hostvars['localhost']['credentials'][0]['project_id'] }}"
+        auth_url: "{{ hostvars['localhost']['credentials'][0]['auth_url'] }}"
         password: "{{hostvars['localhost']['credentials'][0]['token']}}"
         instance_name: "{{ item.key }}"
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
