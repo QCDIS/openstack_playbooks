@@ -13,10 +13,10 @@
   tasks:
     - set_fact:
         keys_exists: true
-      when: hostvars.localhost.credentials[0].keys
+      when: "'keys' in {{hostvars['localhost']['credentials'][0]}} and "
 
     - debug:
-        var: hostvars.localhost.credentials[0].keys
+        var: hostvars['localhost']['credentials'][0]['keys']
 
     - set_fact:
         refresh_token_exists: true
