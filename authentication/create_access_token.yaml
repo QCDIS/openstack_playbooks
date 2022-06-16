@@ -15,7 +15,7 @@
         auth_keys_exists: true
       when: hostvars.localhost.credentials[0].auth_keys
 
-    debug:
+    - debug:
       var: auth_keys_exists
 
     - find:
