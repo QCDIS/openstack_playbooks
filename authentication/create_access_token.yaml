@@ -16,7 +16,7 @@
       when: hostvars.localhost.credentials[0].keys
 
     - debug:
-        var: keys_exists
+        var: hostvars.localhost.credentials[0].keys
 
     - set_fact:
         refresh_token_exists: true
