@@ -50,7 +50,8 @@
     - name: Show openstack networks
       debug:
         msg: "{{ result.openstack_networks }}"
-      -
+
+
     - openstack.cloud.auth:
         auth:
           auth_url: "{{hostvars['localhost']['credentials'][0]['auth_url']}}"
