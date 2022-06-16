@@ -16,9 +16,13 @@
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
 
 
-    - name: Run the command if "access_token" is defined
-      ansible.builtin.shell: echo "I've got '{{ access_token }}' and am not afraid to use it!"
+    - set_fact:
+        access_token_exists: true
       when: access_token is defined
+
+    - set_fact:
+        access_token_exists: false
+      when: access_token is undefined
 
     - include_tasks: get_network.yaml
       vars:
@@ -30,7 +34,7 @@
         protocol: openid
         instance_name: "{{ item.key }}"
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
-      when: access_token is defined
+      when: access_token_exists
 
     - include_tasks: get_network.yaml
       vars:
@@ -39,4 +43,4 @@
         password: "{{hostvars['localhost']['credentials'][0]['token']}}"
         instance_name: "{{ item.key }}"
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
-      when: access_token is undefined
+      when: not access_token_exists
