@@ -1,3 +1,10 @@
+- set_fact:
+    access_token_exists: true
+  when: access_token is defined
+
+- set_fact:
+    access_token_exists: false
+  when: access_token is undefined
 
 - find:
     paths: /tmp/
@@ -30,7 +37,16 @@
     OS_AUTH_TYPE: "{{ token_type }}"
     OS_IDENTITY_PROVIDER: "{{ identity_provider }}"
     OS_PROTOCOL: "{{ protocol }}"
-  when: not stat_result.stat.exists
+  when: not stat_result.stat.exists and access_token_exists
+
+- os_networks_info:
+  register: networks_info_output
+  environment:
+    OS_AUTH_URL: "{{ auth_url }}"
+    OS_PASSWORD: "{{ password }}"
+    OS_PROJECT_ID: "{{ project_id }}"
+  when: not stat_result.stat.exists and not access_token_exists
+
 
 - local_action: copy content={{ networks_info_output }} dest=/tmp/networks_info_output_{{ project_id }}.json
   when: "'openstack_networks' in networks_info_output and networks_info_output['openstack_networks'] | length > 0"
