@@ -41,17 +41,13 @@
 
 - os_networks_info:
   register: networks_info_output
-  environment:
-    OS_USERNAME: "{{ username }}"
-    OS_AUTH_URL: "{{ auth_url }}"
-    OS_PASSWORD: "{{ password }}"
-    OS_PROJECT_ID: "{{ project_id }}"
-    OS_PROJECT_NAME: "Lab"
-    OS_USER_DOMAIN_NAME: "Default"
-    OS_REGION_NAME: "{{domain}}"
-    OS_INTERFACE: "public"
-    OS_IDENTITY_API_VERSION: 3
-#  when: not stat_result.stat.exists and not access_token_exists
+  auth:
+    auth_url: "{{ auth_url }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    project_name: "Lab"
+    project_id: "{{ project_id }}"
+  when: not stat_result.stat.exists and not access_token_exists
 
 - debug:
     var: networks_info_output
