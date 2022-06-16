@@ -13,7 +13,7 @@
   tasks:
     - set_fact:
         auth_keys_exists: true
-      when: hostvars.localhost.credentials[0].auth_keys
+      when: "'auth_keys' not in hostvars.localhost.credentials[0]"
 
     - debug:
         var: auth_keys_exists
