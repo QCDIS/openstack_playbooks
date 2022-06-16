@@ -35,4 +35,4 @@
         password: "{{hostvars['localhost']['credentials'][0]['token']}}"
         instance_name: "{{ item.key }}"
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
-      when: access_token not is defined
+      when: access_token is undefined
