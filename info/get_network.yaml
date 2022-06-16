@@ -39,7 +39,7 @@
     OS_PROTOCOL: "{{ protocol }}"
   when: not stat_result.stat.exists and access_token_exists
 
-- os_networks_info:
+- openstack.cloud.networks_info:
     auth:
       auth_url: "{{ auth_url }}"
       username: "{{ username }}"
