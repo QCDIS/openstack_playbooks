@@ -11,14 +11,14 @@
       ansible_python_interpreter: /usr/bin/python3
 
   tasks:
-
     - debug:
         var: item.key
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
 
 
-    - debug:
-        var: access_token
+    - name: Run the command if "access_token" is defined
+      ansible.builtin.shell: echo "I've got '{{ access_token }}' and am not afraid to use it!"
+      when: foo is access_token
 
     - include_tasks: get_network.yaml
       vars:
@@ -30,7 +30,7 @@
         protocol: openid
         instance_name: "{{ item.key }}"
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
-      when: false
+      when: access_token is defined
 
     - include_tasks: get_network.yaml
       vars:
