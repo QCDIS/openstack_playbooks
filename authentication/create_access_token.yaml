@@ -32,10 +32,6 @@
         name: refresh_token_cache
       when: stat_result.stat.exists
 
-
-
-
-
     - uri:
         url: "{{hostvars['localhost']['credentials'][0]['auth_url']}}"
         user: "{{hostvars['localhost']['credentials'][0]['user']}}"

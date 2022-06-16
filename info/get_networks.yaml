@@ -26,3 +26,13 @@
         protocol: openid
         instance_name: "{{ item.key }}"
       loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
+      when: access_token
+
+    - include_tasks: get_network.yaml
+      vars:
+        project_id: "{{ hostvars['localhost']['project_id'] }}"
+        auth_url: "{{ hostvars['localhost']['auth_url'] }}"
+        password: "{{hostvars['localhost']['credentials'][0]['token']}}"
+        instance_name: "{{ item.key }}"
+      loop: "{{ hostvars['localhost']['instances'] | dict2items }}"
+      when: not access_token
