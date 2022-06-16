@@ -54,6 +54,10 @@
       register: access_token
       when: "refresh_token is defined"
 
+
+  - openstack.cloud.auth:
+      interface: "public"
+
     - set_stats:
         data:
           access_token: "{{ access_token.stdout }}"
