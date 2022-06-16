@@ -16,7 +16,7 @@
       when: hostvars.localhost.credentials[0].auth_keys
 
     - debug:
-      var: auth_keys_exists
+        var: auth_keys_exists
 
     - find:
         paths: /tmp/
