@@ -51,8 +51,7 @@
     OS_REGION_NAME: "{{domain}}"
     OS_INTERFACE: "public"
     OS_IDENTITY_API_VERSION: 3
-
-  when: not stat_result.stat.exists and not access_token_exists
+#  when: not stat_result.stat.exists and not access_token_exists
 
 - debug:
     var: networks_info_output
