@@ -55,8 +55,8 @@
       when: "refresh_token is defined"
 
 
-  - openstack.cloud.auth:
-      interface: "public"
+    - openstack.cloud.auth:
+        interface: "public"
 
     - set_stats:
         data:
