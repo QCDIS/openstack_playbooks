@@ -43,7 +43,7 @@
         body_format: raw
       register: refresh_token_response
 #      when: "'stat' not in  {{stat_result}} and 'keys' in {{hostvars['localhost']['credentials'][0]['keys']}} and 'refresh_token' in {{hostvars['localhost']['credentials'][0]['keys']}}"
-      when: hostvars.localhost.credentials[0].keys is not defined
+      when: stat_result.stat.exists and hostvars.localhost.credentials[0].keys
 
     - local_action: copy content={{ refresh_token_response }} dest=/tmp/refresh_token_response_{{hostvars['localhost']['credentials'][0]['user']}}.json
       when: "'stat' not in  {{stat_result}} and 'keys' in {{hostvars['localhost']['credentials'][0]['keys']}} and 'refresh_token' in {{hostvars['localhost']['credentials'][0]['keys']}}"
