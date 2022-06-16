@@ -11,3 +11,6 @@
 
     - pip:
         name: ['openstacksdk','numpy']
+
+    - shell:
+        cmd: ansible-galaxy collection install openstack.cloud
