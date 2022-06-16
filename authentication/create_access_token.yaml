@@ -12,8 +12,12 @@
 
   tasks:
     - set_fact:
+        keys_exists: true
+      when: hostvars.localhost.credentials[0].keys
+
+    - set_fact:
         refresh_token_exists: true
-      when: hostvars.localhost.credentials[0].keys and hostvars.localhost.credentials[0].keys.refresh_token
+      when: keys_exists and hostvars.localhost.credentials[0].keys.refresh_token
 
     - find:
         paths: /tmp/
