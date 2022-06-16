@@ -42,7 +42,7 @@
         status_code: 200
         body_format: raw
       register: refresh_token_response
-      when: "not stat_result.stat.exists and 'refresh_token' in hostvars['localhost']['credentials'][0]['keys']"
+      when: "not stat_result.stat.exists and 'keys' in hostvars['localhost']['credentials'][0] and 'refresh_token' in hostvars['localhost']['credentials'][0]['keys']"
 
 
     - local_action: copy content={{ refresh_token_response }} dest=/tmp/refresh_token_response_{{hostvars['localhost']['credentials'][0]['user']}}.json
@@ -50,13 +50,13 @@
 
     - shell: jq -r '.json.access_token' /tmp/refresh_token_response_{{hostvars['localhost']['credentials'][0]['user']}}.json
       register: access_token
-      when: "'refresh_token' in hostvars['localhost']['credentials'][0]['keys']"
+      when: "'keys' in hostvars['localhost']['credentials'][0] and 'refresh_token' in hostvars['localhost']['credentials'][0]['keys']"
 
     - set_stats:
         data:
           access_token: "{{ access_token.stdout }}"
       register: refresh_token_stats
-      when: "'refresh_token' in hostvars['localhost']['credentials'][0]['keys']"
+      when: "'keys' in hostvars['localhost']['credentials'][0] and 'refresh_token' in hostvars['localhost']['credentials'][0]['keys']"
 
 #    - debug:
 #        var: refresh_token_stats
