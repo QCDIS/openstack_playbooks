@@ -38,13 +38,26 @@
         var: hostvars['localhost']['credentials'][0]
 
 
+    - name: Gather information about previously created networks
+      openstack.cloud.networks_info:
+        auth:
+          auth_url: "{{hostvars['localhost']['credentials'][0]['auth_url']}}"
+          username: "{{hostvars['localhost']['credentials'][0]['user']}}"
+          password: "{{hostvars['localhost']['credentials'][0]['token']}}"
+          project_name: Lab
+      register: result
 
+    - name: Show openstack networks
+      debug:
+        msg: "{{ result.openstack_networks }}"
+      -
     - openstack.cloud.auth:
         auth:
           auth_url: "{{hostvars['localhost']['credentials'][0]['auth_url']}}"
           username: "{{hostvars['localhost']['credentials'][0]['user']}}"
           password: "{{hostvars['localhost']['credentials'][0]['token']}}"
           project_name: Lab
+
     - name: Show service catalog
       debug:
         var: service_catalog
