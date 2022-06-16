@@ -32,9 +32,7 @@
         name: refresh_token_cache
       when: stat_result.stat.exists
 
-
-    - name: Authenticate to the cloud and retrieve the service catalog
-      openstack.cloud.auth:
+    - openstack.cloud.auth:
         auth:
           auth_url: "{{hostvars['localhost']['credentials'][0]['auth_url']}}"
           username: "{{hostvars['localhost']['credentials'][0]['user']}}"
