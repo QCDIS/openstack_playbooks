@@ -12,15 +12,8 @@
 
   tasks:
     - set_fact:
-        keys_exists: true
-      when: "'keys' in {{hostvars['localhost']['credentials'][0]}} and "
-
-    - debug:
-        var: hostvars['localhost']['credentials'][0]['keys']
-
-    - set_fact:
         refresh_token_exists: true
-      when: keys_exists and hostvars.localhost.credentials[0].keys.refresh_token
+      when: hostvars.localhost.credentials[0].auth_keys and hostvars.localhost.credentials[0].auth_keys.refresh_token
 
     - find:
         paths: /tmp/
