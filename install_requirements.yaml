@@ -13,4 +13,4 @@
         name: ['openstacksdk','numpy']
 
     - shell:
-        cmd: ansible-galaxy collection install openstack.cloud
+        cmd: ansible-galaxy collection install openstack.cloud -p $HOME/.ansible/collections
