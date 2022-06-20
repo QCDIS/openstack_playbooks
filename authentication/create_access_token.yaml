@@ -59,7 +59,6 @@
         auth_type: "password"
         region_name: "RegionOne"
         interface: "public"
-        identity_api_version: 3
         auth:
           username: "{{ hostvars['localhost']['credentials'][0]['user'] }}"
           project_id: "{{ hostvars['localhost']['credentials'][0]['extra_properties']['project_id'] }}"
