@@ -56,6 +56,8 @@
 
 
     - openstack.cloud.auth:
+        auth_type: "password"
+        region_name: "RegionOne"
         auth:
           username: "{{ hostvars['localhost']['credentials'][0]['user'] }}"
           project_id: "{{ hostvars['localhost']['credentials'][0]['extra_properties']['project_id'] }}"
@@ -63,7 +65,6 @@
           password: "{{hostvars['localhost']['credentials'][0]['token']}}"
           project_name: "Lab"
           user_domain_name: "Default"
-          region_name: "RegionOne"
           interface: "public"
           identity_api_version: 3
 
