@@ -55,7 +55,7 @@
       when: "refresh_token is defined"
 
     - debug:
-        var: "{{ hostvars['localhost']['credentials'][0] }}"
+        var: "{{ hostvars['localhost'] }}"
 
     - openstack.cloud.auth:
         auth_type: "password"
