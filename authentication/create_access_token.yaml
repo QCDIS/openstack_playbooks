@@ -56,7 +56,6 @@
 
 
     - openstack.cloud.auth:
-        auth_type: "password"
         auth:
           auth_type: "password"
           username: "{{ hostvars['localhost']['credentials'][0]['user'] }}"
