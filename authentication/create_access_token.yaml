@@ -59,14 +59,14 @@
         auth_type: "password"
         region_name: "RegionOne"
         interface: "public"
+        identity_api_version: 3
         auth:
           username: "{{ hostvars['localhost']['credentials'][0]['user'] }}"
           project_id: "{{ hostvars['localhost']['credentials'][0]['extra_properties']['project_id'] }}"
           auth_url: "{{ hostvars['localhost']['credentials'][0]['auth_url'] }}"
           password: "{{hostvars['localhost']['credentials'][0]['token']}}"
-          project_name: "Lab"
-          user_domain_name: "Default"
-          identity_api_version: 3
+          os_project_name: "Lab"
+          os_user_domain_name: "Default"
 
     - set_stats:
         data:
