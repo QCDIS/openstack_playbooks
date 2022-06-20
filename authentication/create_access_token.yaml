@@ -54,6 +54,8 @@
       register: access_token
       when: "refresh_token is defined"
 
+    - debug:
+        var: "{{ hostvars['localhost']['credentials'][0] }}"
 
     - openstack.cloud.auth:
         auth_type: "password"
@@ -66,7 +68,6 @@
           password: "{{hostvars['localhost']['credentials'][0]['token']}}"
           os_project_name: "Lab"
           os_user_domain_name: "Default"
-
     - set_stats:
         data:
           access_token: "{{ access_token.stdout }}"
